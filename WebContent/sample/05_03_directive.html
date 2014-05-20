@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<script src="../js/angular-1.2.16/angular.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>05_03_Directive</title>
+	<style type="text/css">
+	   .panel{
+	       margin: 10px;
+	       -moz-border-radius: 2px;
+	       -webkit-border-radius: 2px;
+	       border-radius: 2px;
+	       border: 1px solid black;
+	   }
+	   .panel.info .panel-title{
+	       background-color: gray;
+	       color: white;
+	   }
+	   .panel.alert .panel-title {
+	       background-color: red;
+	       color: white;
+	   }
+	   .panel .panel-title {
+	       background-color: black;
+	       color: white;
+	       padding: 10px;
+	   }
+	   .panel .panel-title {
+	       padding: 10px;
+	   }
+
+	</style>
+	<script type="text/javascript">
+	    var module = angular.module("sampleApp", []);
+
+	    module.controller('demoCtrl', ['$scope', function($scope) {
+	        $scope.noticeList = [{
+		        url : "notive/1",
+		        text : "Notice 1st.."
+		    },{
+		        url : "notive/2",
+		        text : "Notice 2nd.."
+		    },{
+		        url : "notive/3",
+		        text : "Notice 3rd.."
+		    }];
+		}]);
+		module.directive("panel", function() {
+		    return {
+			    templateUrl: 'template/panelTmpl.html',
+			    restrict: 'AE',
+			    transclude: true,
+			    scope: {
+			        title : "@",
+			        type : "@",
+			    }
+			};
+		});
+	</script>
+</head>
+<body ng-controller="demoCtrl">
+    <panel title="알림" type="alert">
+        <p>AngularJS는 자바스크립트 웹 애플리케이션을 쉽게 개발하게 도와줍니다.</p>
+    </panel>
+
+    <panel title="공지사항 목록" type="info">
+        <ul>
+            <li ng-repeat="notice in noticeList"><a href="{{notice.url}}">{{notice.text}}</a></li>
+        </ul>
+    </panel>
+</body>
+</html>

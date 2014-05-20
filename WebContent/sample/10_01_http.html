@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>10_01_HTTP</title>
+    <style>
+    .info {
+        margin: 0px auto;
+        height: 20px;
+        background-color: aliceblue;
+    }
+    .info button {
+        float: right;
+    }
+    </style>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", []);
+
+        // 1.================================
+        module.directive("infoBox", [function () {
+            return {
+                restrict: 'E',
+                scope: { infoMessage : '=' },
+                template: '<p class="info">{{infoMessage}}<button ng-click="hide()">x</button></p>',
+                link: function (scope, iElement, iAttrs) {
+                    scope.$watch("infoMessage", function(newData, beforeData) {
+                        if(newData == undefined || newData == '') {
+                            scope.hide();
+                        } else {
+                            iElement.show({
+                                duratioin : 3000,
+                                complate : function() {
+                                    iElement.hide();
+                                }
+                            });
+                        }
+                    });
+
+                    scope.hide = function() {
+                        iElement.hide();
+                        scope.infoMessage = undefined;
+                    };
+                }
+            };
+        }]);
+
+        module.controller("mainCtrl", function($scope, $http) {
+            $scope.user = {};
+            $scope.search = function() {
+                var reqPromise = $http({
+                    method: 'GET',
+                    url: 'json/sample01.json'
+                });
+                reqPromise.success(function(data, status, headers, config) {
+                    $scope.user = data;
+//                     console.log("data : " + data);
+//                     console.log("status : " + status);
+//                     console.log("headers : " + headers);
+//                     console.log("config : " + config);
+                });
+                reqPromise.then(function(response) {
+                    $scope.msg = response.data.userId +" loading complate..";
+                }, function(response) {
+                    $scope.msg = "Error!!";
+                }
+                );
+            }
+        });
+        // 1.================================
+    </script>
+</head>
+<body ng-controller="mainCtrl">
+<!-- 1.======================== -->
+    <info-box info-message="msg"></info-box>
+    <p class="user">
+        User Id : {{user.userId}} <br>
+        User Name : {{user.userName}} <br>
+        User Email : {{user.userEmail}} <br>
+    </p>
+    <div><button ng-click="search()">search</button></div>
+</body>
+</html>

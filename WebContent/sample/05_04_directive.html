@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>05_04_Directive_Used sparkline Chart</title>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery.sparkline.min.js"></script>
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", []);
+        module.directive("ngSparkline", [function() {
+            return {
+                restrict: 'AE',
+                scope: {
+                    chartData : "@"
+                },
+                link: function(scope, iElement, iAttrs) {
+                    var chartData = scope.$eval(scope.chartData),
+                    options = {
+                        type: iAttrs.chartType || 'line'
+                    };
+
+                    jQuery(iElement).sparkline(chartData, options);
+                }
+            };
+        }]);
+
+        module.directive("ngSparkline1", [function() {
+            return {
+                restrict: 'AE',
+                scope: {
+                    chartData : "=",
+                    chartClick : "&"
+                },
+                link: function(scope, iElement, iAttrs) {
+                    options = {type: iAttrs.chartType || 'line' };
+                    scope.$watch('chartData', function(bfData, afData) {
+                        jQuery(iElement).sparkline(scope.chartData, options);
+                    }, true);
+
+                    jQuery(iElement).bind("sparklineClick", function(ev) {
+                        var sparkline = ev.sparklines[0],
+                            region = sparkline.getCurrentRegionFields(),
+                            regionX = region.x,
+                            regionY = region.y;
+                        if(regionX === undefined && region[0]) regionX = region[0].offset;
+                        if(regionY === undefined && region[0]) regionY = region[0].value;
+                        scope.$apply(function() {
+                            scope.chartClick({x:regionX, y:regionY});
+                        });
+                    });
+                }
+            };
+        }]);
+
+        module.controller('sampleCtrl', function ($scope) {
+            $scope.chartData = [0,0,0];
+            $scope.selectedData = {x:null, y:null};
+            $scope.handleClick = function(x,y) {
+                $scope.selectedData.x = x;
+                $scope.selectedData.y = y;
+            };
+        });
+    </script>
+
+    <script type="text/javascript">
+    $(function() {
+        /** This code runs when everything has been loaded on the page */
+        /* Inline sparklines take their values from the contents of the tag */
+        $('.inlinesparkline').sparkline();
+
+        /* Sparklines can also take their values from the first argument
+        passed to the sparkline() function */
+        var myvalues = [10,8,5,7,4,4,1];
+        $('.dynamicsparkline').sparkline(myvalues);
+
+        /* The second argument gives options such as chart type */
+        $('.dynamicbar').sparkline(myvalues, {type: 'bar', barColor: 'green'} );
+
+        /* Use 'html' instead of an array of values to pass options
+        to a sparkline with data in the tag */
+        $('.inlinebar').sparkline('html', {type: 'bar', barColor: 'red'} );
+    });
+    </script>
+</head>
+<body>
+    <ng-sparkline chart-data="[1, 22, 4, 2, 12, 3]" chart-type="bar"></ng-sparkline>
+    <div style="width: 200px; height: 200px;" ng-sparkline chart-data="[3, 4, 2, 10, 3, 4, 11]"></div>
+<hr>
+
+
+<a href="http://omnipotent.net/jquery.sparkline/">http://omnipotent.net/jquery.sparkline/</a>
+<p>
+Inline Sparkline: <span class="inlinesparkline">1,4,4,7,5,9,10</span>.
+</p>
+<p>
+Sparkline with dynamic data: <span class="dynamicsparkline">Loading..</span>
+</p>
+<p>
+Bar chart with dynamic data: <span class="dynamicbar">Loading..</span>
+</p>
+<p>
+Bar chart with inline data: <span class="inlinebar" style="height: 200px;">1,3,4,5,3,5</span>
+</p>
+<hr>
+
+<div ng-controller="sampleCtrl">
+    <input type="number" ng-model="chartData[0]">
+    <input type="number" ng-model="chartData[1]">
+    <input type="number" ng-model="chartData[2]">
+    <br>
+    <p> Data : {{chartData}} </p>
+    <br>
+    <ng-sparkline1 chart-data="chartData" chart-type="bar" chart-click="handelClick(x,y)"></ng-sparkline1>
+    <ng-sparkline1 chart-data="chartData" chart-type="line" chart-click="handelClick(x,y)"></ng-sparkline1>
+    <p>
+        선택한 데이터 : x는  {{selectedData.x}}, y는 {{selectedData.y}}
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html ng-app>
+<script src="../js/angular-1.2.16/angular.min.js"></script>
+<head>
+	<meta charset="EUC-KR">
+	<title>02_tamplate</title>
+</head>
+<body ng-init="person = { name: '재도', favorite: ['사과', '딸기', '포도'] }">
+    <h1>hello {{person.name}}</h1>
+    <p>좋아하는 과일 갯수 : {{ numberOfFavorite = person.favorite.length}}</p>
+    <p>과일갯수 * $100 : {{ numberOfFavorite * 100 | currency }}</p>
+    <p>재도가 맞는가? : {{person.name == '재도'}}</p>
+    <p>좋아하는 과일 수가 4개보다 많은가? {{numverOfFavorite > 4}}</p>
+    <p>scope 에 없는 객체에 접근하면은? {{car.type.name}}</p>
+    <h2>좋아하는 과일</h2>
+    <ul ng-repeat="fruit in person.favorite">
+        <li><a href="#{{fruit}}">{{fruit}}</a></li>
+    </ul>
+</body>
+</html>

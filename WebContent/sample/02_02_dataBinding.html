@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html ng-app>
+<script src="../js/angular-1.2.16/angular.min.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>02_02_dataBinding</title>
+	<script>
+        function mainCtrl($scope) {
+            var menuList = [
+                            {itemId : 1, itemName : '샌드위치', itemPrice : 2000, itemCount : 0},
+                            {itemId : 2, itemName : '아케리카노', itemPrice : 1000, itemCount : 0},
+                            {itemId : 3, itemName : '카푸치노', itemPrice : 1500, itemCount : 0}
+                            ]
+            $scope.menuList = menuList;
+            $scope.totalPrice = 0;
+
+            $scope.buy = function () {
+                $scope.totalPrice = 0;
+                angular.forEach($scope.menuList, function(menu, idx) {
+                    $scope.totalPrice = $scope.totalPrice + (menu.itemPrice * menu.itemCount);
+                });
+            };
+	    }
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+    <div>
+	    <h1>메뉴판</h1>
+	    <h2>메뉴 목록</h2>
+        <table>
+            <thead>
+                <tr><th>메뉴</th><th>가격</th><th>갯수</th><th>ETC</th></tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="menu in menuList" ng-class="{'yellow':{{$even}}}">
+                    <td>{{menu.itemName}}</td>
+                    <td>{{menu.itemPrice}}</td>
+                    <td><input type="text" ng-model="menu.itemCount"></td>
+                    <td>
+                        {{$index}} / {{$first}} / {{$middle}} / {{$last}} / {{$even}} / {{$odd}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button ng-click="buy()">구매</button>
+	    <h2>구입 가격</h2>
+	    <div>
+	       가격 : {{totalPrice}}
+	    </div>
+    </div>
+    <hr/>
+
+    <style type="text/css">
+        .box {
+        width: 100px;
+        height: 100px;
+        }
+
+        .red {
+        background-color: red;
+        }
+        .yellow {
+        background-color: yellow;
+        }
+        .green {
+        background-color: green;
+        }
+        .blue {
+        background-color: blue;
+        }
+        .black {
+        background-color: black;
+        }
+    </style>
+    <div>
+        <input type="radio" ng-model="color" value="red">RED<br>
+        <input type="radio" ng-model="color" value="green">GREEN<br>
+        <input type="radio" ng-model="color" value="blue">BLUE<br>
+
+        <div ng-switch="color">
+            <div ng-switch-when="red" class="box red"></div>
+            <div ng-switch-when="green" class="box green"></div>
+            <div ng-switch-when="blue" class="box blue"></div>
+            <div ng-switch-default class="box black"></div>
+        </div>
+    </div>
+    <hr/>
+
+    <div>
+        약관에 동의 : <input type="checkbox" ng-model="checked" ng-init="checked=false" />
+        <br>
+       동의하면 다음으로 진행됩니다.
+       <button ng-if="checked">다음</button>
+    </div>
+    <hr/>
+
+    <div>
+       동의 여부 : <input type="checkbox" ng-model="checked1" ng-init="checked1=false" />
+        <br>
+        <div>            <span ng-show="checked1">다음으로 진행합니다. <button>다음</button></span>
+        </div>
+        <div>
+            <span ng-hide="checked1">다음으로 진행할 수 없습니다.</span>
+        </div>
+    </div>
+    <hr/>
+
+    <div ng-init="countryList=[{name:'한국', code:'kr', continent:'아시아'}, {name:'일본', code:'jr', continent:'아시아'}, {name:'미국', code:'en', continent:'북미'}]">
+        <form name="myRouteForm">
+            <div>
+                출발국가 :
+                <select ng-model="depCountry" ng-options="country.name for country in countryList" ng-required="true">
+                    <option value="">선택하여 주세요</option>
+                </select>
+            </div>
+            <div>
+                경유국가 :
+                <select ng-model="viaCountry" ng-options="country.name for country in countryList" >
+                    <option value="">선택하여 주세요</option>
+                </select>
+            </div>
+            <div>
+                도착국가(대룍 그룹별) :
+                <select ng-model="arrCountry" ng-options="country.name group by country.continent for country in countryList" ng-required="true">
+                    <option value="">선택하여 주세요</option>
+                </select>
+            </div>
+        </form>
+        <div>
+            <ul>
+                <li>출발국가 : {{depCountry.name}}</li>
+                <li>경유국가 : {{viaCountry}}</li>
+                <li>도착국가 : {{arrCountry.name}}</li>
+            </ul>
+        </div>
+        <div ng-show="myRouteForm.$invalid">
+            출발국가와 도착국가는 필히 선택하세요.
+        </div>
+    </div>
+
+
+</body>
+</html>

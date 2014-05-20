@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>07_01_Filter</title>
+   <script src="../js/jquery.js"></script>
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", []);
+
+        // 1.================================
+        module.controller("1stCtrl", ['$scope', function($scope) {
+            $scope.cValue = 6300;
+            $scope.dNow = new Date();
+            $scope.jObj = {name : 'Lilis'};
+            $scope.lString = 'Jinho Lee';
+            $scope.nValue = 10/3;
+        }]);
+        // 1.================================
+
+    </script>
+</head>
+<body>
+<!-- 1.======================== -->
+<div ng-controller="1stCtrl">
+    <h1>Useage Filter..</h1>
+    <h2>Currency Filter : </h2>
+    <p>default : {{ cValue }}</p>
+    <p>filtered : {{ cValue | currency }}</p>
+
+    <h2>date Filter : </h2>
+    <p>default : {{ dNow }}</p>
+    <p>filtered : {{ dNow | date:'yyyy년 mm월 dd일' }}</p>
+
+    <h2>JSON Filter : </h2>
+    <p>default : {{ jObj }}</p>
+    <p>filtered : {{ jObj | json }}</p>
+
+    <h2>lowercase Filter : </h2>
+    <p>default : {{ lString }}</p>
+    <p>filtered : {{ lString | lowercase }}</p>
+
+    <h2>uppercase Filter : </h2>
+    <p>default : {{ lString }}</p>
+    <p>filtered : {{ lString | uppercase }}</p>
+
+    <h2>Number Filter : </h2>
+    <p>default : {{ nValue }}</p>
+    <p>filtered : {{ nValue | number:5 }}</p>
+
+</div>
+
+<!-- 3.======================== -->
+<hr>
+
+</body>
+</html>

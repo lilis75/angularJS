@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>07_02_Filter</title>
+   <script src="../js/jquery.js"></script>
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", []);
+
+        // 1.================================
+        module.controller("1stCtrl", ['$scope', '$filter', function($scope, $filter) {
+            var userList = [
+                               { userId : 'Jay', userName: '제이', userEmail: 'jay@ng.com' },
+                               { userId : 'soon', userName: '순이', userEmail: 'soon@ng.com' },
+                               { userId : 'cindy', userName: '가영', userEmail: 'cindy@ng.com' },
+                               { userId : 'mino', userName: '민호', userEmail: 'mino@ng.com' },
+                               { userId : 'taepong', userName: '태홍', userEmail: 'taepong@ng.com' }
+            ];
+
+            $scope.value = new Date();
+            $scope.dataFormatedValue = $filter('date')($scope.value, 'yyyy-mm-dd');
+            $scope.userList = userList;
+            $scope.filter = function(filterObj) {
+                $scope.userList = $filter('filter')(userList, filterObj);
+            };
+        }]);
+        // 1.================================
+
+        // 2.================================
+        module.config(function($filterProvider) {
+            $filterProvider.register('capitalize', function() {
+                return function(text) {
+                    return text.charAt(0).toUpperCase() + text.slice(1);
+                };
+            });
+        });
+        module.controller('2ndCtrl', ['$scope', function($scope) {
+            $scope.hello = "hello";
+        }]);
+        // 2.================================
+
+
+    </script>
+</head>
+<body>
+<!-- 1.======================== -->
+<div ng-controller="1stCtrl">
+    <p>필터 사용 전 날짜 데이터 : {{value}}</p>
+    <p>date 필터 사용 : {{dataFormatedValue}} </p>
+    <hr>
+    <div>사용자 이름 : <input type="text" ng-model="search.userName"><button ng-click="filter(search)">필터처리</button></div>
+    <ul>
+        <li ng-repeat="user in userList">
+            <p>{{user.userId}} | {{ user.userName}} | {{user.userEmail}}</p>
+        </li>
+    </ul>
+</div>
+
+<!-- 2.======================== -->
+<hr>
+<div ng-controller="2ndCtrl">
+    <p>{{hello | capitalize}}</p>
+</div>
+
+</body>
+</html>

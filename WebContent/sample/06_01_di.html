@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>06_01_DI</title>
+<!--    <script src="../js/jquery.js"></script> -->
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", [])
+        // 1.================================
+        module.factory('hello', [function() {
+                var helloText = " 님 안녕하세요.";
+
+                return {
+                    say : function(name) {
+                        return name + helloText;
+                    }
+                };
+        }]);
+        module.controller("mainCtrl", function($scope, hello) {
+                $scope.hello = hello.say("리리스");
+        });
+        // 1.================================
+
+        // 2.================================
+        module.factory("AppNm", [function() {
+            return "demo App";
+        }]);
+        module.factory("UserResource", function() {
+            var userList = [];
+
+            return {
+                addUser : function(newUser) {
+                    userList.push(newUser);
+                },
+                updateUser : function(idx, updatedUser) {
+                    userList[idx] = updatedUser;
+                },
+                deleteUser : function(idx) {
+                    userList[idx] = undefined;
+                },
+                selectUsers : function() {
+                    return userList;
+                },
+            };
+        });
+        module.controller("1stCtrl", function($scope, AppNm, UserResource) {
+            $scope.appNm = AppNm;
+
+            $scope.users = UserResource.selectUsers();
+
+            $scope.addNewUser = function(newUser) {
+            	UserResource.addUser({
+                    name : newUser.name,
+                    email : newUser.email
+                });
+            };
+        });
+        // 2.================================
+
+        // 3.================================
+        function Calculator() {
+            this.lastValue = 0;
+
+            this.add = function(a, b) {
+                var returnV = a+b;
+                this.lastValue = returnV;
+
+                return returnV;
+            }
+            this.minus = function(a, b) {
+                var returnV = a-b;
+                this.lastValue = returnV;
+
+                return returnV;
+            }
+        }
+
+        module.factory("CalcByF", [function() {
+          return new Calculator();
+        }]);
+        module.service("CalcByS", Calculator);
+        module.controller("3rdCtrl", function($scope, CalcByS, CalcByF) {
+            $scope.val1 = CalcByF.add(10,3);
+            console.log(CalcByF.lastValue);
+            $scope.val2 = CalcByS.add(20,10);
+            console.log(CalcByS.lastValue);
+        });
+
+        // 3.================================
+
+    </script>
+</head>
+<body>
+<!-- 1.======================== -->
+<div ng-controller="mainCtrl">
+    <p>{{hello}}</p>
+</div>
+
+<!-- 2.======================== -->
+<hr>
+<div ng-controller="1stCtrl">
+    <p> 애플리케이션 이름 : {{appNm}}</p>
+    <div>
+        이름 : <input type="text" ng-model="newUser.name">, 이메일 : <input type="text" ng-model="newUser.email">
+        <button ng-click="addNewUser(newUser)">Add New User</button>
+    </div>
+    <ul>
+        <li ng-repeat="user in users">{{user.name}}, {{user.email}}</li>
+    </ul>
+</div>
+
+<!-- 2.======================== -->
+<hr>
+<div ng-controller="3rdCtrl">
+    <p>10 + 3 = {{val1}}</p>
+    <p>20 + 10 = {{val2}}</p>
+</div>
+
+</body>
+</html>

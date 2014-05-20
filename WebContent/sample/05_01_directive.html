@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<script src="../js/angular-1.2.16/angular.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>05_01_Directive</title>
+	<script type="text/javascript">
+	    var module = angular.module("sampleApp", []);
+
+	    module.controller("mainCtrl", function($scope) {
+		    $scope.getStyle = function() {
+			    return {"color" : "red"};
+			};
+		});
+
+		module.directive("hello", function($log) {
+		    return function(scope, iElement, iAttrs, controller, transcludeFn) {
+				$log.log("<h1>hello Directive " + iAttrs.name + "</h1>");
+		        iElement.html("<h1>hello Directive " + iAttrs.name + " : " + iAttrs.myData + "</h1>");
+			};
+		});
+
+	</script>
+</head>
+<body>
+<div ng-controller="mainCtrl">
+    <p ng:style="getStyle()">hello</p>
+    <p class="ng_style: getStyle()">Hello</p>
+    <ng-form name="groupForm">
+        <form name="formA"><input type="text" ></form>
+        <form name="formB"><input type="text" ></form>
+    </ng-form>
+</div>
+<hr>
+
+<div>
+    <div hello name="angularJS"></div>
+    <div hello name="kkkkkk" my-data="2750"></div>
+</div>
+
+
+
+</body>
+</html>

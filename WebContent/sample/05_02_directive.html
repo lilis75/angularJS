@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<script src="../js/angular-1.2.16/angular.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>05_02_Directive</title>
+	<script type="text/javascript">
+	    var module = angular.module("sampleApp", []);
+		module.directive("hello", function($log) {
+		    return {
+			    name: 0,
+			    priority: 0,
+			    template: '<div></div>',
+			    // templateUrl: 'directive.html',
+			    replace: false,
+			    transclude: false,
+			    restrict: 'A',
+			    scope: false,
+			    // require: 'ngModel',
+			    controller: function($scope, $element, $attrs, $transclude){},
+			    complie: function compile(tElement, tAttrs) {
+			        return {
+			            pre: function preLink(scope, iElement, iAttrs, controller) {},
+			            post: function postLink(scope, iElenemt, iAttrs, controller) {
+			                $log.log("<h1>hello " + iAttrs.name + "</h1>");
+			                iElement.html("<h1>hello " + iAttrs.name + "</h1>");
+				        }
+				    }
+				    // or
+				    // return function postLink(scope, iElement, iAttrs, controller, transcludeFn) {}
+				}
+// 				,
+// 				or
+// 				link: {
+// 				    pre: preLink(scope, iElement, iAttrs, controller) {},
+// 				    post: postLink(scope, iElenemt, iAttrs, controller) {}
+// 				}
+// 				or
+// 				link: function postLink(scope, iElenemt, iAttrs, controller) {}
+			};
+		});
+
+
+		module.directive('bye', function() {
+		    return {
+		        template: "<h1>bye <span>name</span></h1>",
+		        restrict: "EA",
+		        link: function link(scope, iEl, iAt, ctrl) {
+		            iEl.find("span").text(iAt.name);
+			    }
+			}
+		});
+
+		module.directive('bye1', function() {
+		    return {
+// 		        template: "<h1>bye <span>name</span></h1>",
+                templateUrl: 'template/helloTmpl.html',
+		        restrict: "EA",
+// 		        link: function link(scope, iEl, iAt, ctrl) {
+// 		            iEl.find("span").text(iAt.name);
+// 			    }
+		        controller: function ($scope, $element, $attrs, $transclude) {
+		            $scope.name = $attrs.name;
+			    }
+			}
+		});
+
+	</script>
+</head>
+<body>
+
+<div>
+    <div hello name="angularJS"></div>
+    <div hello name="kkkkkk" my-data="2750"></div>
+</div>
+<hr>
+
+<div>
+    <div bye name="angularJS"></div>
+    <div bye1 name="angularJS_1"></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>10_02_HTTP</title>
+    <script src="../js/jquery.js"></script>
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", []);
+
+        // 1.================================
+        module.value("baseUrl", "http://localhost:8080");
+        module.controller("mainCtrl", function($scope, $http, baseUrl) {
+            $scope.user = {};
+            $scope.editable = false;
+            $scope.search = function( searchObj ) {
+                var reqPromise = $http.get(baseUrl + 'getUser', {
+                    params:searchObj
+                });
+                reqPromise.success(function(data, status, headers, config) {
+                    if(data.userId) {
+                        $scope.user = data;
+                        $scope.isSearched = true;
+                    }
+                    $scope.error = undefined;
+                });
+                reqpromise.error(error);
+            };
+
+            $scope.insert = function() {
+                $scope.edit = "insert";
+                $scope.editable = true;
+                $scope.user = {};
+            };
+
+            $scope.update = function() {
+                $scope.edit = "update";
+                $scope.editable = true;
+            };
+
+            $scope.save = function(edit, user) {
+                var reqPromise;
+                switch(edit) {
+                case "insert" :
+                    reqPromise = $http.post(baseUrl+"insertUser", user);
+                    break;
+                case "update" :
+                    reqPromise = $http.post(baseUrl+"updateUser", user);
+                    break;
+                default :
+                    reqPromise = {};
+                    break;
+                }
+
+                reqPromise.success(function(data, status, headers, config) {
+                    reset();
+                });
+                reqPromise.error(error);
+            };
+
+            $scope.delete = function(user) {
+                $http.delete(baseUrl+"deleteUser", {
+                    params : user
+                }).success(function() {reset();});
+            };
+
+            $scope.cancle = function() {
+                reset();
+            };
+
+            function error(data, status, headers, config) {
+                $scope.user = {};
+                $scope.error = "로드 실패..";
+            }
+
+            function reset() {
+                $scope.user = {};
+                $scope.edit = undefined;
+                $scope.error = undefined;
+                $scope.editable = false;
+            }
+        });
+        // 1.================================
+    </script>
+</head>
+<body ng-controller="mainCtrl">
+<!-- 1.======================== -->
+    <info-box info-message="msg"></info-box>
+    <p class="user">
+        User Id : {{user.userId}} <br>
+        User Name : {{user.userName}} <br>
+        User Email : {{user.userEmail}} <br>
+    </p>
+    <div><button ng-click="search()">search</button></div>
+</body>
+</html>

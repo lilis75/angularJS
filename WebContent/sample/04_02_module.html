@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="cookieDemo">
+<script src="../js/angular-1.2.16/angular.js"></script>
+<script src="../js/angular-1.2.16/angular-cookies.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>04_02_Module</title>
+	<script type="text/javascript">
+	    var module = angular.module("cookieDemo", ['ngCookies']);
+
+	    module.controller("mainCtrl", ['$scope', '$cookieStore', function($scope, $cookieStore) {
+		    $scope.value = $cookieStore.get("test") || "없음";
+		    $scope.getValue = function() {
+		        $scope.value = $cookieStore.get("test");
+			};
+			$scope.putValue = function(iV) {
+			    $cookieStore.put("test", iV);
+			};
+		}]);
+
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+    <h1>Cookie Service Use..</h1>
+    <p>test 키로 저장된 값 :  {{value}}</p>
+    <button ng-click="getValue()">쿠키 가져오기</button>
+    <br/>
+    <input type="text" ng-model="iValue" >
+    <button ng-click="putValue(iValue)">쿠키 저장</button>
+</body>
+</html>

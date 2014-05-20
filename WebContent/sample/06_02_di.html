@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="sampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>06_02_DI</title>
+<!--    <script src="../js/jquery.js"></script> -->
+    <script src="../js/angular-1.2.16/angular.js"></script>
+
+    <script type="text/javascript">
+        var module = angular.module("sampleApp", []);
+
+        // 1.================================
+        module.provider("Logger", [function() {
+            function Logger(msg) {
+                if(checkNativeLogger) console.log(msg);
+            }
+
+            Logger.debug = function(msg) { if(checkNativeLogger) console.debug(msg); };
+            Logger.info = function(msg) { if(checkNativeLogger) console.info(msg); };
+
+            function checkNativeLogger() {
+                if(console) return true;
+                return false;
+            }
+
+            this.$get = [ function () {
+                return Logger;
+            }];
+        }]);
+        module.controller("1stCtrl", function($scope, Logger) {
+            Logger("console.log 로 출력하는 로그메시지");
+            Logger.debug("console.debug 로 출력하는 로그메시지");
+            Logger.info("console.info 로 출력하는 로그메시지");
+        });
+        // 1.================================
+
+    </script>
+</head>
+<body>
+<!-- 1.======================== -->
+<div ng-controller="1stCtrl">
+</div>
+
+</body>
+</html>

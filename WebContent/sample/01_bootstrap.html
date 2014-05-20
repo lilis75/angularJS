@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<script src="../js/angular-1.2.16/angular.min.js"></script>
+<head>
+	<meta charset="EUC-KR">
+	<title>01_bootstrap</title>
+	<script>
+	   angular.element(document).ready( function() {
+		   angular.bootstrap(document.getElementById('app1'));
+		   angular.bootstrap(document.getElementById('app2'));
+		   });
+	</script>
+</head>
+<!-- <body ng-app> -->
+<body>
+	<div id="app1">
+	{{ 1+2 }}
+	</div>
+	<div id="app2">
+	{{ 1+2 }}
+	</div>
+</body>
+</html>

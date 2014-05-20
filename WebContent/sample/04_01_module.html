@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="ngBookmark">
+<script src="../js/angular-1.2.16/angular.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>04_Module</title>
+	<script type="text/javascript">
+	    angular.module("ngBookmark", [])
+	       .controller("bookmarkCtrl", ['$scope', function($scope) {
+		       $scope.bookmarkList = [
+		                           { id:"google", name:"구글", url:"www.google.co.kr"},
+		                           { id:"naver", name:"네이버", url:"www.naver.com"},
+		                           { id:"daum", name:"다음", url:"www.daum.net"}
+		       ];
+		   }]);
+	</script>
+</head>
+<body>
+    <div ng-controller="bookmarkCtrl">
+        <h1>북마크 목록</h1>
+        <div>
+            <ul>
+                <li ng-repeat="bookmark in bookmarkList">
+                    <em>{{bookmark.name}}</em> : <span>{{bookmark.url}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
